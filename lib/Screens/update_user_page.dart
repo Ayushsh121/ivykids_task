@@ -16,10 +16,10 @@ class _UpdateUsersState extends State<UpdateUsers> {
   CollectionReference users =
   FirebaseFirestore.instance.collection('users');
 
-  Future<void> updateUser(id, name, email, password) {
+  Future<void> updateUser(id, name, contact, password) {
     return users
         .doc(id)
-        .update({'name': name, 'email': email, 'password': password})
+        .update({'name': name, 'contact': contact, 'password': password})
         .then((value) => print("User Updated"))
         .catchError((error) => print("Failed to update user: $error"));
   }
@@ -48,7 +48,7 @@ class _UpdateUsersState extends State<UpdateUsers> {
               }
               var data = snapshot.data!.data();
               var name = data!['name'];
-              var email = data['email'];
+              var contact = data['contact'];
               var password = data['password'];
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
@@ -78,21 +78,21 @@ class _UpdateUsersState extends State<UpdateUsers> {
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10.0),
                       child: TextFormField(
-                        initialValue: email,
+                        keyboardType: TextInputType.number,
+                        initialValue: contact,
                         autofocus: false,
-                        onChanged: (value) => email = value,
+                        onChanged: (value) => contact = value,
                         decoration: InputDecoration(
-                          labelText: 'Email: ',
+                          labelText: 'contact: ',
                           labelStyle: TextStyle(fontSize: 20.0),
                           border: OutlineInputBorder(),
                           errorStyle:
                           TextStyle(color: Colors.redAccent, fontSize: 15),
+
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please Enter Email';
-                          } else if (!value.contains('@')) {
-                            return 'Please Enter Valid Email';
+                            return 'Please Enter contact';
                           }
                           return null;
                         },
@@ -128,7 +128,7 @@ class _UpdateUsersState extends State<UpdateUsers> {
                             onPressed: () {
                               // Validate returns true if the form is valid, otherwise false.
                               if (_formKey.currentState!.validate()) {
-                                updateUser(widget.id, name, email, password);
+                                updateUser(widget.id, name, contact, password);
                                 Navigator.pop(context);
                               }
                             },
